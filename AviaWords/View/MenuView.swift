@@ -3,10 +3,11 @@ import SwiftUI
 struct MenuView: View {
     @Binding var viewState: ViewState
     let images: Images
+    @StateObject var orientationManager = OrientationManager()
 
     var body: some View {
         ZStack {
-            if OrientationManager().isLandscape {
+            if orientationManager.isLandscape {
                 RemoteImage(url: images.bgMenuLand)
                     .scaledToFill()
                     .ignoresSafeArea()

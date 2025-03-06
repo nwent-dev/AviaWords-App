@@ -5,7 +5,7 @@ struct CrosswordWord {
     let startRow: Int
     let startCol: Int
     let isHorizontal: Bool
-    let isHidden: Bool
+    let isHidden: Bool 
 }
 
 struct CrosswordCell: Identifiable {
@@ -15,6 +15,7 @@ struct CrosswordCell: Identifiable {
     var correctLetter: String? = nil
     var imageName: String? = nil
 }
+
 
 struct Crossword {
     var grid: [[CrosswordCell]]
@@ -66,7 +67,7 @@ struct CrosswordView: View {
                     CrosswordWord(word: "P", startRow: 1, startCol: 5, isHorizontal: true, isHidden: true),
                     CrosswordWord(word: "LOT", startRow: 3, startCol: 5, isHorizontal: false, isHidden: true),
                     CrosswordWord(word: "P", startRow: 1, startCol: 7, isHorizontal: true, isHidden: true),
-                    CrosswordWord(word: "ANE", startRow: 3, startCol: 7, isHorizontal: false, isHidden: true),
+                    CrosswordWord(word: "ANE", startRow: 3, startCol: 7, isHorizontal: false, isHidden: true)
                 ],
                 images: [(row: 2, col: 0, image: images.airfield),
                          (row: 1, col: 1, image: images.air),
@@ -92,7 +93,7 @@ struct CrosswordView: View {
                          (row: 3, col: 2, image: images.aeroplane),
                          (row: 6, col: 0, image: images.tail),
                          (row: 1, col: 8, image: images.illuminator),
-                         (row: 0, col: 10, image: images.wing)],
+                         (row: 0, col: 10, image: images.wing),],
                 gridSize: 12
             )
         case 3:
@@ -111,13 +112,13 @@ struct CrosswordView: View {
                     CrosswordWord(word: "UEL", startRow: 9, startCol: 8, isHorizontal: false, isHidden: true),
                 ],
                 images: [
-                    (row: 5, col: 0, image: images.illuminator),
-                    (row: 0, col: 2, image: images.wheel),
-                ],
+                        (row: 5, col: 0, image: images.illuminator),
+                        (row: 0, col: 2, image: images.wheel),
+                        ],
                 gridSize: 12
             )
         default:
-            return Crossword(words: [], images: [(row: 0, col: 0, image: "")], gridSize: 5)
+            return Crossword(words: [],images: [(row: 0, col: 0, image: "")], gridSize: 5)
         }
     }
 
@@ -151,6 +152,7 @@ struct CrosswordView: View {
         isGameWon = true
     }
 }
+
 
 struct CellView: View {
     @Binding var cell: CrosswordCell
@@ -187,17 +189,17 @@ struct CellView: View {
 
 struct GameView: View {
     @State var isGameWon: Bool = false // Is game won
-    @Binding var viewState: ViewState // Current View State
-    let images: Images // All images
-    @Binding var timeRemaining: Int // Start time in seconds
-    @Binding var selectedLevel: Int // Current level
+    @Binding var viewState: ViewState  // Current View State
+    let images: Images                 // All images
+    @Binding var timeRemaining: Int    // Start time in seconds
+    @Binding var selectedLevel: Int    // Current level
     @State private var timerRunning: Bool = true
 
     var body: some View {
         ZStack {
             // MARK: - Landscape MODE
-
             if OrientationManager().isLandscape {
+                
                 // Background Image
                 RemoteImage(url: images.bgGameLand)
                     .ignoresSafeArea()
@@ -245,8 +247,7 @@ struct GameView: View {
                         }
                     }
                 }
-
-                // MARK: - Vertical MODE
+            // MARK: - Vertical MODE
             } else {
                 RemoteImage(url: images.bgGame)
                     .scaledToFill()
