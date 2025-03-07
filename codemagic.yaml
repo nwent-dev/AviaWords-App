@@ -1,0 +1,71 @@
+workflows:
+  unity-ios-workflow:
+    name: iOS Workflow
+    max_build_duration: 120
+    integrations:
+      app_store_connect: "acc22"
+    environment:
+      xcode: 16.2
+      groups:
+        - 1DEFAULT
+      vars:
+        XCODE_PROJECT: "AviaWords.xcodeproj" #<----------------SET HERE
+        XCODE_SCHEME: "AviaWords" #<----------------SET HERE
+        CERTIFICATE_PRIVATE_KEY: |
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEpQIBAAKCAQEA9F/rfO6BHRhaGGLmkt0Xj2bXl9OUUjL9Kaldz4iFq1IwbRcY
+            vHh1kXuVKkOAVQdFiD4W7vnIs1fNFoFsa3zH0Oqwu8XolcKU/m57xdWm1a5hh6E5
+            j6NC6ZGKogbOLYUdS3j9hVq1aRy2tAcOwhhdy4a6lGQKS7n5liRxD2jAQIbTFLgP
+            YIfCjT8CovgHOLftQRnRt2yh3zFiC0Rj2boCkI9WK17jacn87e4QQzxTLxvTAVcH
+            bjPiRZsBLpxe8kfpQwfUwOsrB9Sa+N+sS0kWUjvdu++fWNlKuuYhK763oYhdKQql
+            xA9xw8m/5FXZLWnOUFdeMP2q1wwbENQF41YnTwIDAQABAoIBAGx9zzbqTiEEKC+O
+            bO5DwMt17X4mvUEXCQT/f7n80tdCCGTOLbmywwNhOdKHIEjfjxOS+SyEcYGJl/AH
+            aoJ35eAO6YKbtQwT1ID2vPWSSlywa/VCcyMdaL34UvNnEQ7te5l/sBINuN9fE4/u
+            WDN8jNuoR1pM5bND8BYjvJwKNdwPATk9ewfiGKjrxsO7yGYjNIOojlz5vSv/CZ3+
+            tK/p1GaC05NsMIqc1caeabJ+mWKe0m4o21hjeBwFEQ9oteJ/3Y9/qFbO2Ig3rx7R
+            NqTdqh5bUj08U1m0QepOP+W5WK1oyBRhkItbnGH+AK28SiRgu8tXSz05AEfQSIAI
+            2LP8Oe0CgYEA/VTb9OYG0vU32QoVZ0LERB+re5ZYdi049C4LJSaRrEuZ883lvWa6
+            78oJNJ8Elp+CAzNsNHMtgjlnd+Xk4/G4tH6gdm4Aky2pfutdyYii6wydc+f687ni
+            F/UVzd5LSEMxFymwLhBWeZLOQ/q7UVP/xdPSrV/xRjoQ2iz8G9gW8zMCgYEA9vLo
+            U6PRAL4A2018MdRIcnhtOSV0iCK/yp+MAei/8E7dIC4GPksf+ffr117dTRSiTmzj
+            WGRJ6dEAsVpnaRhcoZSw/yUs1/5YrLOxTmXAKieCrwhuGopXOa73e1mC/MlOVYnu
+            JOYkQNTuqtebOhFtYAcMGuI64EVBHJfLQV4C+3UCgYEAzOC2SudFmZLsKcF38d0T
+            cazTOM4smNaV+xTJuq/onBlAVuar6HOOt6MDsuTwBwjVUtVhq0GDCpB2V4c7iAXT
+            xVWrXFw2ZtFFBPpBDV5NtB6tsDFqyXYJnip+CdK/u59rsjnq3DYmWYga/OtoVqvC
+            bTGUbtbrAEqxmmFLOxGV7fUCgYEA76OG2mt0zUCUejv2EjDLYPIGI9d5/wWhklJD
+            PjML13ngUXL4Mgka7aqtXWE8ZalpW6uE7ujbZR+hiXmOMkkm0tIE9IOxwaSbjnQN
+            0mMhGIcg5RPMLMskm+BzXmrdlssOzik8ROhkM9muBXGWu8HfnrkYARqaQbpS1hlj
+            b3p4cGUCgYEAkpxvfFPx0aNolMYVINMRptr+h3zPfXjFvGXLUs5Ww2t22oCSUR95
+            lmG2wiy41dLPnxl1paGnJkbsxiDJUxaYvDfaWsuCVP0aGHxaZGh+kCr7i8RVzWZ2
+            EdOJC8Whyzva0wVdfRQ4EczYxlHEpaISbasC851pVo8w3u0GFgwbaeY=
+            -----END RSA PRIVATE KEY-----
+        
+    scripts:
+      - name: Delete derived data
+        script: rm -rf ~/Library/Developer/Xcode/DerivedData
+      - name: Set up keychain to be used for code signing using Codemagic CLI 'keychain' command
+        script: keychain initialize
+      - name: Fetch signing files for main target
+        script: |
+          app-store-connect fetch-signing-files "com.vitaliiKovalchuk.AviaWords" \
+            --type IOS_APP_STORE \
+            --create
+      - name: Set up signing certificate
+        script: keychain add-certificates
+      - name: Set up code signing settings on Xcode project
+        script: xcode-project use-profiles
+      - name: Set build number manually
+        script: agvtool new-version -all 1
+      - name: Build ipa for distribution
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME" \
+            --archive-xcargs "CODE_SIGN_STYLE=Auto"
+      - name: Publish to App Store Connect
+        script: |
+          app-store-connect publish --path "/Users/builder/clone/build/ios/ipa/AviaWords.ipa"
+    
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM

@@ -9,9 +9,11 @@ struct TimeView: View {
         return [images.min, images.min3, images.min5]
     }
     
+    @StateObject var orientationManager = OrientationManager()
+    
     var body: some View {
         ZStack {
-            if OrientationManager().isLandscape {
+            if orientationManager.isLandscape {
                 RemoteImage(url: images.bgAnythingLand)
                     .scaledToFill()
                     .ignoresSafeArea()
@@ -34,7 +36,10 @@ struct TimeView: View {
                             viewState = .menu
                         }
                 }
-                .padding(.top, UIScreen.main.bounds.width*0.08)
+                .padding(
+                    .top,
+                    orientationManager.isLandscape ? UIScreen.main.bounds.height * 0.08 : UIScreen.main.bounds.width*0.08
+                )
                 
                 Spacer()
                 
@@ -61,7 +66,9 @@ struct TimeView: View {
                     
                     RemoteImage(url: imagesOfTime[selectedIndex])
                         .scaledToFit()
-                        .frame(width: OrientationManager().isLandscape ? UIScreen.main.bounds.height*0.6 : UIScreen.main.bounds.width*0.6)
+                        .frame(
+                            width: orientationManager.isLandscape ? UIScreen.main.bounds.height*0.6 : UIScreen.main.bounds.width*0.6
+                        )
                         .id(selectedIndex)
                     
                     Button {

@@ -7,12 +7,19 @@ struct VolumeView: View {
     @Binding var isSoundOff: Bool
     
     @State private var audioPlayer: AVAudioPlayer?
+    @StateObject var orientationManager = OrientationManager()
     
     var body: some View {
         ZStack {
-            RemoteImage(url: images.bgAnything)
-                .scaledToFill()
-                .ignoresSafeArea()
+            if orientationManager.isLandscape {
+                RemoteImage(url: images.bgAnythingLand)
+                    .scaledToFill()
+                    .ignoresSafeArea()
+            } else {
+                RemoteImage(url: images.bgAnything)
+                    .scaledToFill()
+                    .ignoresSafeArea()
+            }
             
             VStack {
                 HStack {
@@ -26,16 +33,29 @@ struct VolumeView: View {
                             viewState = .menu
                         }
                 }
-                .padding(.top, UIScreen.main.bounds.width * 0.08)
+                .padding(
+                    .top,
+                    orientationManager.isLandscape ? UIScreen.main.bounds.height * 0.08 : UIScreen.main.bounds.width * 0.08
+                )
                 
                 Spacer()
                 
                 Button {
                     toggleSound()
                 } label: {
-                    RemoteImage(url: isSoundOff ? images.soundOffBtn : images.soundOnBtn)
-                        .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width * 0.75)
+                    if isSoundOff {
+                        RemoteImage(url: images.soundOffBtn)
+                            .scaledToFit()
+                            .frame(
+                                width: orientationManager.isLandscape ? UIScreen.main.bounds.height * 0.75 : UIScreen.main.bounds.width * 0.75
+                            )
+                    } else {
+                        RemoteImage(url: images.soundOnBtn)
+                            .scaledToFit()
+                            .frame(
+                                width: orientationManager.isLandscape ? UIScreen.main.bounds.height * 0.75 : UIScreen.main.bounds.width * 0.75
+                            )
+                    }
                 }
                 
                 Spacer()

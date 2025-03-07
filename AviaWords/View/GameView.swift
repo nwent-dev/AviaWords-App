@@ -49,6 +49,7 @@ struct CrosswordView: View {
     @State private var crossword: Crossword
     let images: Images
     @Binding var isGameWon: Bool
+    @StateObject var orientationManager = OrientationManager()
 
     init(level: Int, images: Images, isGameWon: Binding<Bool>) {
         self.level = level
@@ -58,6 +59,7 @@ struct CrosswordView: View {
     }
 
     static func getCrossword(for level: Int, images: Images) -> Crossword {
+        
         switch level {
         case 1:
             return Crossword(
@@ -123,7 +125,7 @@ struct CrosswordView: View {
     }
 
     var body: some View {
-        let screenSize = OrientationManager().isLandscape ? UIScreen.main.bounds.height * 0.95 : UIScreen.main.bounds.width * 0.95
+        let screenSize = orientationManager.isLandscape ? UIScreen.main.bounds.height * 0.95 : UIScreen.main.bounds.width * 0.95
         let cellSize = screenSize / CGFloat(crossword.gridSize)
 
         ZStack {
@@ -194,11 +196,12 @@ struct GameView: View {
     @Binding var timeRemaining: Int    // Start time in seconds
     @Binding var selectedLevel: Int    // Current level
     @State private var timerRunning: Bool = true
+    @StateObject var orientationManager = OrientationManager()
 
     var body: some View {
         ZStack {
             // MARK: - Landscape MODE
-            if OrientationManager().isLandscape {
+            if orientationManager.isLandscape {
                 
                 // Background Image
                 RemoteImage(url: images.bgGameLand)
@@ -300,14 +303,14 @@ struct GameView: View {
             if isGameWon {
                 RemoteImage(url: images.winCard)
                     .scaledToFit()
-                    .frame(width: OrientationManager().isLandscape ? UIScreen.main.bounds.height * 0.9 : UIScreen.main.bounds.width * 0.9)
+                    .frame(width: orientationManager.isLandscape ? UIScreen.main.bounds.height * 0.9 : UIScreen.main.bounds.width * 0.9)
             }
             
             // Show lose card
             if timeRemaining <= 0 {
                 RemoteImage(url: images.loseCard)
                     .scaledToFit()
-                    .frame(width: OrientationManager().isLandscape ? UIScreen.main.bounds.height * 0.9 : UIScreen.main.bounds.width * 0.9)
+                    .frame(width: orientationManager.isLandscape ? UIScreen.main.bounds.height * 0.9 : UIScreen.main.bounds.width * 0.9)
             }
         }
         .onAppear {

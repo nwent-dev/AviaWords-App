@@ -11,7 +11,7 @@ struct MainView: View {
     @State private var viewState: ViewState = .menu
     @State private var time: Int = 60
     @State private var selectedLevel: Int = 1
-    @State private var isSoundOff: Bool = false
+    @State private var isSoundOff: Bool = true
     
     init() {
         checkInternetConnection()
@@ -42,7 +42,7 @@ struct MainView: View {
                 case .volume:
                     VolumeView(viewState: $viewState, images: images, isSoundOff: $isSoundOff)
                 case .info:
-                    InfoView()
+                    InfoView(viewState: $viewState, images: images)
                 }
             } else if imageService.isLoading {
                 VStack {
