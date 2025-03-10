@@ -85,7 +85,7 @@ struct CrosswordView: View {
                     CrosswordWord(word: "SSIS", startRow: 4, startCol: 3, isHorizontal: false, isHidden: true),
                     CrosswordWord(word: "TA", startRow: 6, startCol: 1, isHorizontal: true, isHidden: true),
                     CrosswordWord(word: "L", startRow: 6, startCol: 4, isHorizontal: true, isHidden: true),
-                    CrosswordWord(word: "L", startRow: 2, startCol: 8, isHorizontal: false, isHidden: true),
+                    CrosswordWord(word: "I", startRow: 2, startCol: 8, isHorizontal: false, isHidden: true),
                     CrosswordWord(word: "LUMINAT", startRow: 4, startCol: 8, isHorizontal: false, isHidden: true),
                     CrosswordWord(word: "OR", startRow: 10, startCol: 9, isHorizontal: true, isHidden: true),
                     CrosswordWord(word: "WI", startRow: 1, startCol: 10, isHorizontal: false, isHidden: true),
@@ -110,14 +110,22 @@ struct CrosswordView: View {
                     CrosswordWord(word: "E", startRow: 4, startCol: 8, isHorizontal: true, isHidden: true),
                     CrosswordWord(word: "T", startRow: 6, startCol: 8, isHorizontal: true, isHidden: true),
                     CrosswordWord(word: "AMP", startRow: 6, startCol: 11, isHorizontal: false, isHidden: true),
-                    CrosswordWord(word: "AMP", startRow: 8, startCol: 8, isHorizontal: true, isHidden: true),
+                    CrosswordWord(word: "FLA", startRow: 8, startCol: 8, isHorizontal: true, isHidden: true),
                     CrosswordWord(word: "UEL", startRow: 9, startCol: 8, isHorizontal: false, isHidden: true),
                 ],
                 images: [
-                        (row: 5, col: 0, image: images.illuminator),
-                        (row: 0, col: 2, image: images.wheel),
+                    (row: 5, col: 0, image: images.illuminator),
+                    (row: 0, col: 2, image: images.wheel),
+                    (row: 9, col: 3, image: images.lane),
+                    (row: 9, col: 3, image: images.lane),
+                    (row: 1, col: 6, image: images.engine),
+                    (row: 3, col: 5, image: images.nose),
+                    (row: 2, col: 8, image: images.seat),
+                    (row: 7, col: 8, image: images.fuel),
+                    (row: 8, col: 12, image: images.flap),
+                    (row: 4, col: 11, image: images.ramp),
                         ],
-                gridSize: 12
+                gridSize: 13
             )
         default:
             return Crossword(words: [],images: [(row: 0, col: 0, image: "")], gridSize: 5)
@@ -306,7 +314,7 @@ struct GameView: View {
                     .scaledToFit()
                     .frame(width: orientationManager.isLandscape ? UIScreen.main.bounds.height * 0.9 : UIScreen.main.bounds.width * 0.9)
                     .onTapGesture {
-                        if selectedLevel < 2 {
+                        if selectedLevel < 3 {
                             selectedLevel += 1
                             viewState = .menu
                             timeRemaining = 60
