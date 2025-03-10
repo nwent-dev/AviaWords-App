@@ -49,11 +49,11 @@ struct TimeView: View {
                             selectedIndex -= 1
                             switch selectedIndex {
                             case 1:
-                                time = 1*60
+                                time = 1
                             case 2:
-                                time = 2*60
+                                time = 2
                             case 3:
-                                time = 3*60
+                                time = 3
                             default:
                                 print("makaka")
                             }
@@ -76,11 +76,11 @@ struct TimeView: View {
                             selectedIndex += 1
                             switch selectedIndex {
                             case 1:
-                                time = 1*60
+                                time = 1
                             case 2:
-                                time = 2*60
+                                time = 2
                             case 3:
-                                time = 3*60
+                                time = 3
                             default:
                                 print("makaka")
                             }

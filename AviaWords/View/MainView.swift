@@ -9,7 +9,8 @@ struct MainView: View {
     @StateObject private var imageService = ImageService()
     @State private var isConnectedToInternet = true
     @State private var viewState: ViewState = .menu
-    @State private var time: Int = 60
+    @State private var time: Int = 1
+    @State private var timee: Int = 1
     @State private var selectedLevel: Int = 1
     @State private var isSoundOff: Bool = true
     
@@ -34,11 +35,11 @@ struct MainView: View {
                 case .menu:
                     MenuView(viewState: $viewState, images: images)
                 case .game:
-                    GameView(viewState: $viewState, images: images, timeRemaining: $time, selectedLevel: $selectedLevel)
+                    GameView(viewState: $viewState, images: images, time: $timee, selectedLevel: $selectedLevel)
                 case .level:
                     LevelView(viewState: $viewState, images: images, selectedLevel: $selectedLevel)
                 case .time:
-                    TimeView(viewState: $viewState, images: images, time: $time)
+                    TimeView(viewState: $viewState, images: images, time: $timee)
                 case .volume:
                     VolumeView(viewState: $viewState, images: images, isSoundOff: $isSoundOff)
                 case .info:

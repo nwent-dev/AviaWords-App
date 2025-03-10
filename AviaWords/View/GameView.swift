@@ -193,8 +193,9 @@ struct GameView: View {
     @State var isGameWon: Bool = false // Is game won
     @Binding var viewState: ViewState  // Current View State
     let images: Images                 // All images
-    @Binding var timeRemaining: Int    // Start time in seconds
+    @Binding var time: Int
     @Binding var selectedLevel: Int    // Current level
+    @State private var timeRemaining: Int = 60    // Start time in seconds
     @State private var timerRunning: Bool = true
     @StateObject var orientationManager = OrientationManager()
 
@@ -304,6 +305,15 @@ struct GameView: View {
                 RemoteImage(url: images.winCard)
                     .scaledToFit()
                     .frame(width: orientationManager.isLandscape ? UIScreen.main.bounds.height * 0.9 : UIScreen.main.bounds.width * 0.9)
+                    .onTapGesture {
+                        if selectedLevel < 2 {
+                            selectedLevel += 1
+                            viewState = .menu
+                            timeRemaining = 60
+                        } else {
+                            viewState = .menu
+                        }
+                    }
             }
             
             // Show lose card
@@ -311,9 +321,14 @@ struct GameView: View {
                 RemoteImage(url: images.loseCard)
                     .scaledToFit()
                     .frame(width: orientationManager.isLandscape ? UIScreen.main.bounds.height * 0.9 : UIScreen.main.bounds.width * 0.9)
+                    .onTapGesture {
+                        viewState = .menu
+                        timeRemaining = 60
+                    }
             }
         }
         .onAppear {
+            timeRemaining = time * 60
             startCountdown()
         }
         .onChange(of: isGameWon) { newValue in
